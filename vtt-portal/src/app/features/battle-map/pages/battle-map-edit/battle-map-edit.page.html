@@ -1,0 +1,6 @@
+<div #canvasContainer class="canvas-container" >
+    <app-battle-map-canvas (mouseVelocity)="dragScrollEvent($event)"></app-battle-map-canvas>
+</div>
+
+<button (click)="save()">Save</button>
+<button (click)="backToSave()">Back To Save</button>

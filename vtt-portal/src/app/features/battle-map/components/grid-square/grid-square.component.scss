@@ -1,0 +1,18 @@
+.grid-square {
+    height: 25px;
+    width: 25px;
+
+    border-right: solid black;
+    border-bottom: solid black;
+    border-width: 1px;
+}
+
+.with-left {
+    border-left: solid black;
+    border-width: 1px;
+}
+
+.with-top {
+    border-top: solid black;
+    border-width: 1px;
+}

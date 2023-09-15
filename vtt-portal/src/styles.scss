@@ -1,0 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    margin: 0;
+}
+
+.centered {
+    position: absolute;
+    margin: auto;
+    display: block;
+    bottom: 0px;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}

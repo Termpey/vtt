@@ -1,0 +1,25 @@
+**/go.work
+**/.env
+
+# Compiled output
+**/dist
+**/tmp
+**/out-tsc
+**/bazel-out
+
+# Visual Studio Code
+**/.vscode/*
+**/!.vscode/settings.json
+**/!.vscode/tasks.json
+**/!.vscode/launch.json
+**/!.vscode/extensions.json
+**/.history/*
+
+**/node_modules
+**/npm-debug.log
+
+**/.angular/cache
+**/.sass-cache
+
+.DS_Store
+**/.DS_Store

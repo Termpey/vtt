@@ -1,0 +1,30 @@
+<div class="grid-container" >
+    <div class="grid-row" *ngFor="let row of [].constructor(rows); let i = index">
+      <div class="grid-col" *ngFor="let col of [].constructor(columns); let j = index">
+        <app-grid-square *ngIf="i == 0 && j == 0" [withTop]="true" [withLeft]="true"></app-grid-square>
+        <app-grid-square *ngIf="i == 0 && j > 0" [withTop]="true"></app-grid-square>
+        <app-grid-square *ngIf="j == 0 && i > 0" [withLeft]="true"></app-grid-square>
+        <app-grid-square *ngIf="j != 0 && i != 0"></app-grid-square>
+      </div>
+    </div>
+  </div>
+  
+  <div class="grid-size-controls-container">
+    <div class="size-control">
+      <label>Rows: {{rows}}</label>
+      <button (click)="editRows(1)">+</button>
+      <button (click)="editRows(-1)">-</button>
+    </div>
+      
+    <div class="size-control">
+      <label>Columns: {{columns}}</label>
+      <button (click)="editColumns(1)">+</button>
+      <button (click)="editColumns(-1)">-</button>
+    </div>
+  </div>
+  
+  <div class="file-upload-container">
+    <input type="file" (change)="onFileChange($event)">
+  </div>
+  
+  <img *ngIf="fileUrl" src={{fileUrl}}/>

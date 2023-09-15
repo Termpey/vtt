@@ -1,0 +1,9 @@
+<div #canvas class="canvas" (mousedown)="mouseDownEvent($event)" (mousemove)="mouseDragEvent($event)" (mouseup)="mouseUpEvent()" (wheel)="scrollWheelEvent($event)">
+    <div *ngIf="fileUrl == null" class="img-input-container">
+        <input type="file" id="image-upload" (change)="onFileChange($event)" hidden>
+        <label for="image-upload" class="img-button"><b><font [color]="'white'">Upload a Map</font></b></label>
+    </div>
+    <div *ngIf="fileUrl != null" class="grid-container">
+        <img class="map-img"  src={{fileUrl}}/>
+    </div>
+</div>

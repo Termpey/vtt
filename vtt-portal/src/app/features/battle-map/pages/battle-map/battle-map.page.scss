@@ -1,0 +1,28 @@
+.grid-container {
+    width: 50%;
+    height: 100%;
+
+    margin: auto
+}
+
+.grid-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.grid-size-controls-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.size-control {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 10px;
+}

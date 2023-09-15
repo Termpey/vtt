@@ -1,0 +1,33 @@
+.canvas {
+    height: 500%;
+    width: 500%;
+
+    background-color: lightgray;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-button {
+    height: 20px;
+    width: 120px;
+
+    border-color: white;
+    border-style: dashed;
+
+    background: none;
+
+    text-align: center;
+    align-items: center;
+}
+
+.img-button:hover {
+    cursor: pointer;
+
+    border-style: solid;
+}
+
+.map-img {
+    pointer-events: none;
+}
