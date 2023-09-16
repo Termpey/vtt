@@ -7,7 +7,7 @@ import (
 )
 
 func NewRouter() *gin.Engine {
-	router := gin.New()
+	router := gin.Default()
 
 	controllers.InitUserMap(router)
 

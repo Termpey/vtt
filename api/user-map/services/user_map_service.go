@@ -2,7 +2,6 @@ package services
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 
 	"vtt/api/aws"
@@ -15,7 +14,7 @@ func InitUserMapService() {
 	db.Database.AutoMigrate(&models.BattleMap{})
 }
 
-func SaveUserMap(newBattleMap models.NewBattleMap) (*models.BattleMap, error) {
+func SaveBattleMap(newBattleMap models.NewBattleMap) (*models.BattleMap, error) {
 
 	file, _ := newBattleMap.File.Open()
 
@@ -32,8 +31,6 @@ func SaveUserMap(newBattleMap models.NewBattleMap) (*models.BattleMap, error) {
 
 	toReturn = toReturn.FromNewBattleMap(newBattleMap, result)
 
-	fmt.Println(toReturn)
-
 	toReturn, err = toReturn.Save()
 
 	if err != nil {
@@ -41,4 +38,42 @@ func SaveUserMap(newBattleMap models.NewBattleMap) (*models.BattleMap, error) {
 	}
 
 	return toReturn, nil
+}
+
+func UpdateBattleMap(battleMap models.BattleMap) (*models.BattleMap, error) {
+	toReturn, err := battleMap.Update()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return toReturn, nil
+}
+
+func DeleteBattleMap(id int) (*models.BattleMap, error) {
+	toDelete, err := GetBattleMapById(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	toReturn, err := toDelete.Delete()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return toReturn, nil
+}
+
+func GetBattleMapById(id int) (*models.BattleMap, error) {
+	toReturn := models.BattleMap{}
+
+	err := db.Database.First(&toReturn, id).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &toReturn, nil
 }
