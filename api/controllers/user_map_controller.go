@@ -23,6 +23,7 @@ func InitUserMap(eng *gin.Engine) {
 			battleMapsGroup.PUT("/", updateBattleMap)
 			battleMapsGroup.DELETE("/:id", deleteBattleMap)
 			battleMapsGroup.GET("/:id", getById)
+			battleMapsGroup.GET("/", getBattleMaps)
 		}
 
 	}
@@ -89,6 +90,16 @@ func getById(c *gin.Context) {
 	}
 
 	toReturn, err := services.GetBattleMapById(id)
+
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.JSON(http.StatusOK, toReturn)
+}
+
+func getBattleMaps(c *gin.Context) {
+	toReturn, err := services.GetBattleMaps()
 
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)

@@ -77,3 +77,15 @@ func GetBattleMapById(id int) (*models.BattleMap, error) {
 
 	return &toReturn, nil
 }
+
+func GetBattleMaps() (*[]models.BattleMap, error) {
+	toReturn := []models.BattleMap{}
+
+	err := db.Database.Find(&toReturn).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &toReturn, nil
+}
