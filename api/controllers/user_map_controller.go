@@ -19,11 +19,11 @@ func InitUserMap(eng *gin.Engine) {
 	{
 		battleMapsGroup := userMapsGroup.Group("/battle-maps")
 		{
-			battleMapsGroup.POST("/", saveBattleMap)
-			battleMapsGroup.PUT("/", updateBattleMap)
+			battleMapsGroup.POST("", saveBattleMap)
+			battleMapsGroup.PUT("", updateBattleMap)
 			battleMapsGroup.DELETE("/:id", deleteBattleMap)
 			battleMapsGroup.GET("/:id", getById)
-			battleMapsGroup.GET("/", getBattleMaps)
+			battleMapsGroup.GET("", getBattleMaps)
 		}
 
 	}

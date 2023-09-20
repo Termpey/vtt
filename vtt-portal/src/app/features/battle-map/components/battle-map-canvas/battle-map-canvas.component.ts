@@ -20,8 +20,14 @@ export class BattleMapCanvasComponent {
   private _oldY: number = 0;
   private _zoom: number = 1;
 
+  private _file?: File;
+
   public get zoom(): number {
     return this._zoom;
+  }
+
+  public get file(): File | undefined {
+    return this._file;
   }
 
   fileUrl: string | ArrayBuffer | null = null;
@@ -31,8 +37,8 @@ export class BattleMapCanvasComponent {
     const htmlElement = e.target ? (e.target as HTMLInputElement) : null;
 
     if(htmlElement && htmlElement.files && htmlElement.files.length > 0){
-      let file = htmlElement.files[0];
-      reader.readAsDataURL(file);
+      this._file = htmlElement.files[0];
+      reader.readAsDataURL(this._file);
       reader.onload = () => {
         this.fileUrl = reader.result;
       }

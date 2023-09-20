@@ -6,7 +6,7 @@ import { GridSquareComponent } from './components/grid-square/grid-square.compon
 import { BattleMapPage } from './pages/battle-map/battle-map.page';
 import { BattleMapCanvasComponent } from './components/battle-map-canvas/battle-map-canvas.component';
 import { BattleMapEditPage } from './pages/battle-map-edit/battle-map-edit.page';
-
+import { BattleMapService } from 'src/app/shared/service/battle-map.service';
 
 
 @NgModule({
@@ -16,6 +16,7 @@ import { BattleMapEditPage } from './pages/battle-map-edit/battle-map-edit.page'
     BattleMapCanvasComponent,
     BattleMapEditPage
   ],
+  providers: [BattleMapService],
   imports: [
     CommonModule,
     BattleMapRoutingModule
