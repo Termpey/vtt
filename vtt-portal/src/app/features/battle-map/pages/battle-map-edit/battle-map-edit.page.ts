@@ -1,10 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { MouseVelocity } from 'src/app/features/battle-map/models/mouse-velocity.model';
 import { BattleMapCanvasComponent } from '../../components/battle-map-canvas/battle-map-canvas.component';
-import { MapPlacement } from '../../models/map-placement.model';
 import { BattleMap, NewBattleMap } from '../../models/battle-map.model';
 import { BattleMapService } from 'src/app/shared/service/battle-map.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from 'src/app/shared/service/data.service';
 
 @Component({
   selector: 'app-battle-map-edit',
@@ -21,7 +23,7 @@ export class BattleMapEditPage implements OnInit{
   private _curMap?: BattleMap;
   private _mode: 'edit' | 'new';
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private battleMapService: BattleMapService){
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private battleMapService: BattleMapService, private dataService: DataService){
     if(this.router.url.includes('new')){
       this._mode = 'new'
     }else{
@@ -32,7 +34,7 @@ export class BattleMapEditPage implements OnInit{
   ngOnInit(): void {
     if(this._mode == 'edit'){
       this.activatedRoute.data.subscribe(({ battleMap }) => {
-        this._curMap = battleMap;
+        this._curMap, this.dataService.CurrentBattleMap = battleMap;
       });
     }
   }
@@ -75,7 +77,8 @@ export class BattleMapEditPage implements OnInit{
       }
 
       this.battleMapService.newBattleMap(this._newMap).subscribe(result => {
-        console.log(result);
+        this.dataService.CurrentBattleMap = result;
+        this.router.navigate([`battle-map/edit/${result.id}`])
       });
     }
   }

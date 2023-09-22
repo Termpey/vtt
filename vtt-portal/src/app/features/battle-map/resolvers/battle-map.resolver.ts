@@ -4,11 +4,13 @@ import { Observable } from 'rxjs';
 
 import { BattleMap } from '../models/battle-map.model';
 import { BattleMapService } from 'src/app/shared/service/battle-map.service';
+import { DataService } from 'src/app/shared/service/data.service';
 
 export const battleMapResolverById: ResolveFn<Observable<BattleMap>> | ResolveFn<BattleMap> = (route, state) => {
+  const data = inject(DataService).CurrentBattleMap;
 
-  if(route.data['battleMap'] && route.data['battleMap'].id == route.paramMap.get('id')){
-    return route.data['battleMap']
+  if(data != undefined && data.id == Number(route.paramMap.get('id'))){
+    return data;
   }
 
   return inject(BattleMapService).getBattleMapByID(Number(route.paramMap.get('id')));
