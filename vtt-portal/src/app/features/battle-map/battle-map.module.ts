@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { BattleMapRoutingModule } from './battle-map-routing.module';
 import { GridSquareComponent } from './components/grid-square/grid-square.component';
@@ -19,6 +20,7 @@ import { BattleMapService } from 'src/app/shared/service/battle-map.service';
   providers: [BattleMapService],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     BattleMapRoutingModule
   ]
 })

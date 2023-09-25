@@ -1,5 +1,5 @@
-<form [formGroup]="" (submit)="" class="edit-page">
-    <input type="text"/>
+<form [formGroup]="mapForm" (submit)="save()" class="edit-page">
+    <input type="text" formControlName="mapName"/>
     <div #canvasContainer class="canvas-container">
         <app-battle-map-canvas (mouseVelocity)="dragScrollEvent($event)"></app-battle-map-canvas>
     </div>

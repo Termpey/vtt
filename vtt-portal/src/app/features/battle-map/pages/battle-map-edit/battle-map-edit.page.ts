@@ -14,10 +14,11 @@ import { DataService } from 'src/app/shared/service/data.service';
   styleUrls: ['./battle-map-edit.page.scss']
 })
 export class BattleMapEditPage implements OnInit{
-  drag: boolean = false;
 
   @ViewChild('canvasContainer', {read: ElementRef}) canvasContainer: ElementRef | undefined;
   @ViewChild(BattleMapCanvasComponent) canvas: BattleMapCanvasComponent | undefined;
+
+  mapForm: FormGroup;
 
   private _newMap?: NewBattleMap;
   private _curMap?: BattleMap;
@@ -29,13 +30,28 @@ export class BattleMapEditPage implements OnInit{
     }else{
       this._mode = 'edit'
     }
+
+    this.mapForm = new FormGroup({
+      mapName: new FormControl<String>(''),
+
+    })
   }
 
   ngOnInit(): void {
     if(this._mode == 'edit'){
       this.activatedRoute.data.subscribe(({ battleMap }) => {
         this._curMap, this.dataService.CurrentBattleMap = battleMap;
+        
+        if(this._curMap){
+          this.initializeForm(this._curMap);
+        }
       });
+    }else {
+      this._newMap = {
+        name: '',
+        file: undefined,
+        ...(this.calculateMapRatios())
+      }
     }
   }
 
@@ -55,7 +71,7 @@ export class BattleMapEditPage implements OnInit{
         this.canvasContainer.nativeElement.scrollLeft = scrollLeft;
 
         this.canvas.setZoom(zoom);
-        }
+      }
     }
   }
 
@@ -64,6 +80,20 @@ export class BattleMapEditPage implements OnInit{
       this.canvasContainer.nativeElement.scrollTop -= change.changeY;
       this.canvasContainer.nativeElement.scrollLeft -= change.changeX;
     }
+
+    let mapRatios = this.calculateMapRatios();
+
+    if(this._mode == 'edit' && this._curMap){
+      this._curMap.scrollLeftRatio = Number(mapRatios.scrollLeftRatio);
+      this._curMap.scrollTopRatio = Number(mapRatios.scrollTopRatio);
+      this._curMap.zoomRatio = Number(mapRatios.zoomRatio);
+    }
+
+    if(this._mode == 'new' && this._newMap){
+      this._newMap.scrollLeftRatio = mapRatios.scrollLeftRatio;
+      this._newMap.scrollTopRatio = mapRatios.scrollTopRatio;
+      this._newMap.zoomRatio = mapRatios.zoomRatio;
+    }
   }
 
   save(){
@@ -71,9 +101,7 @@ export class BattleMapEditPage implements OnInit{
       this._newMap = {
         file: this.canvas.file,
         name: "Temp",
-        scrollTopRatio: (this.canvasContainer?.nativeElement.scrollTop/window.innerHeight).toString(),
-        scrollLeftRatio: (this.canvasContainer?.nativeElement.scrollLeft/window.innerWidth).toString(),
-        zoomRatio: ((this.canvas?.zoom ? this.canvas?.zoom : 0) / (window.innerHeight * window.innerWidth)).toString()
+        ...(this.calculateMapRatios())
       }
 
       this.battleMapService.newBattleMap(this._newMap).subscribe(result => {
@@ -81,6 +109,18 @@ export class BattleMapEditPage implements OnInit{
         this.router.navigate([`battle-map/edit/${result.id}`])
       });
     }
+  }
+
+  private calculateMapRatios(): { scrollTopRatio: string, scrollLeftRatio: string, zoomRatio: string } {
+    return {
+      scrollTopRatio: this.canvas ? (this.canvasContainer?.nativeElement.scrollTop/window.innerHeight).toString() : '',
+      scrollLeftRatio: this.canvas ? (this.canvasContainer?.nativeElement.scrollLeft/window.innerWidth).toString() : '',
+      zoomRatio: this.canvas ? ((this.canvas?.zoom ? this.canvas?.zoom : 0) / (window.innerHeight * window.innerWidth)).toString() : ''
+    }
+  }
+
+  private initializeForm(map: BattleMap) {
+    this.mapForm.value.mapName = map.name;
   }
 
 }
