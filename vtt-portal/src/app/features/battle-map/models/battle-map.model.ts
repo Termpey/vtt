@@ -11,7 +11,7 @@ export interface BattleMap {
 }
 
 export interface NewBattleMap {
-    file?: File
+    file: File
     name: string
     scrollTopRatio: string
     scrollLeftRatio: string

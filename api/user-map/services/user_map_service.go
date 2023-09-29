@@ -3,6 +3,7 @@ package services
 import (
 	"bytes"
 	"io"
+	"strings"
 
 	"vtt/api/aws"
 	"vtt/api/db"
@@ -18,10 +19,13 @@ func SaveBattleMap(newBattleMap models.NewBattleMap) (*models.BattleMap, error) 
 
 	file, _ := newBattleMap.File.Open()
 
+	fileNameSplit := strings.Split(newBattleMap.File.Filename, ".")
+	mapName := newBattleMap.Name + "." + fileNameSplit[len(fileNameSplit)-1]
+
 	buf := bytes.NewBuffer(nil)
 
 	io.Copy(buf, file)
-	result, err := aws.SaveFile(buf)
+	result, err := aws.SaveFile(buf, mapName)
 
 	if err != nil {
 		return &models.BattleMap{}, err
@@ -70,6 +74,12 @@ func GetBattleMapById(id int) (*models.BattleMap, error) {
 	toReturn := models.BattleMap{}
 
 	err := db.Database.First(&toReturn, id).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	toReturn.StoragePath, err = aws.GetFileUrl(toReturn.StoragePath)
 
 	if err != nil {
 		return nil, err

@@ -2,14 +2,15 @@ package aws
 
 import (
 	"bytes"
+	"strings"
 	"sync"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
-
-// ...
 
 var lock = &sync.Mutex{}
 
@@ -29,13 +30,36 @@ func getInstance() *session.Session {
 	return sess
 }
 
-func SaveFile(buf *bytes.Buffer) (*s3manager.UploadOutput, error) {
+func GetFileUrl(objUrl string) (string, error) {
+	var localSess = getInstance()
+	serviceClient := s3.New(localSess)
+
+	urlSlice := strings.Split(objUrl, "/")
+
+	objKey := urlSlice[len(urlSlice)-2] + "/" + urlSlice[len(urlSlice)-1]
+
+	req, _ := serviceClient.GetObjectRequest(&s3.GetObjectInput{
+		Bucket: aws.String("vtt-dev"),
+		Key:    aws.String(objKey),
+	})
+
+	urlStr, err := req.Presign(3 * time.Hour)
+
+	if err != nil {
+		return "", err
+	}
+
+	return urlStr, nil
+
+}
+
+func SaveFile(buf *bytes.Buffer, fileName string) (*s3manager.UploadOutput, error) {
 	var localSess = getInstance()
 	uploader := s3manager.NewUploader(localSess)
 
 	result, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String("vtt-dev"),
-		Key:    aws.String("bm-testing/newFile.png"),
+		Key:    aws.String("bm-testing/" + fileName),
 		Body:   buf,
 	})
 

@@ -1,14 +1,29 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
 
 import { MouseVelocity } from 'src/app/features/battle-map/models/mouse-velocity.model';
 
 @Component({
   selector: 'app-battle-map-canvas',
   templateUrl: './battle-map-canvas.component.html',
-  styleUrls: ['./battle-map-canvas.component.scss']
+  styleUrls: ['./battle-map-canvas.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi:true,
+      useExisting: BattleMapCanvasComponent
+    },
+    {
+      provide: NG_VALIDATORS,
+      multi: true,
+      useExisting: BattleMapCanvasComponent
+    }
+  ]
 })
-export class BattleMapCanvasComponent {
+export class BattleMapCanvasComponent implements ControlValueAccessor, Validator{
   @Input() draggable: boolean = true;
+  @Input() fileUrl: string | ArrayBuffer | null = null;
+  
   @Output() mouseVelocity: EventEmitter<MouseVelocity> = new EventEmitter<MouseVelocity>();
 
   @ViewChild('canvas', {read: ElementRef}) canvas: ElementRef | undefined;
@@ -30,7 +45,9 @@ export class BattleMapCanvasComponent {
     return this._file;
   }
 
-  fileUrl: string | ArrayBuffer | null = null;
+  onChange = (file: File) => {};
+
+  onTouched = () => {}
 
   onFileChange(e: Event){
     let reader = new FileReader();
@@ -84,6 +101,32 @@ export class BattleMapCanvasComponent {
       }
       this.canvas.nativeElement.style.transform = `scale(${this._zoom})`;
     }
+  }
+
+  writeValue(file: File): void {
+    this._file = file;
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  validate(control: AbstractControl<any, any>): ValidationErrors | null {
+    let file = control.value;
+
+    if(!file){
+      return {
+        mustBeDefined: {
+          file
+        }
+      }
+    }
+
+    return null;
   }
 
   private calculateVelocity(x: number, y: number) : MouseVelocity{

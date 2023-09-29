@@ -20,8 +20,8 @@ export class BattleMapEditPage implements OnInit{
 
   mapForm: FormGroup;
 
-  private _newMap?: NewBattleMap;
-  private _curMap?: BattleMap;
+  protected _newMap?: NewBattleMap;
+  protected _curMap?: BattleMap;
   private _mode: 'edit' | 'new';
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private battleMapService: BattleMapService, private dataService: DataService){
@@ -33,15 +33,15 @@ export class BattleMapEditPage implements OnInit{
 
     this.mapForm = new FormGroup({
       mapName: new FormControl<String>(''),
-
+      mapFile: new FormControl<File | undefined>(undefined)
     })
   }
 
   ngOnInit(): void {
     if(this._mode == 'edit'){
       this.activatedRoute.data.subscribe(({ battleMap }) => {
-        this._curMap, this.dataService.CurrentBattleMap = battleMap;
-        
+        this._curMap = this.dataService.CurrentBattleMap = battleMap;
+
         if(this._curMap){
           this.initializeForm(this._curMap);
         }
@@ -49,7 +49,7 @@ export class BattleMapEditPage implements OnInit{
     }else {
       this._newMap = {
         name: '',
-        file: undefined,
+        file: new File(new Array<Blob>(), "temp"),
         ...(this.calculateMapRatios())
       }
     }
@@ -120,7 +120,7 @@ export class BattleMapEditPage implements OnInit{
   }
 
   private initializeForm(map: BattleMap) {
-    this.mapForm.value.mapName = map.name;
+    this.mapForm.controls['mapName'].setValue(map.name);
   }
 
 }
