@@ -29,7 +29,7 @@ type BattleMap struct {
 	DeletedAt       gorm.DeletedAt `gorm:"index" json:"deletedAt"`
 }
 
-func (BattleMap) TableName() string {
+func (*BattleMap) TableName() string {
 	return "battle_map"
 }
 

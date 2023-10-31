@@ -11,5 +11,9 @@ func Init(port string) {
 
 	router := NewRouter()
 
-	router.Run(port)
+	err = router.Run(port)
+
+	if err != nil {
+		panic(err)
+	}
 }

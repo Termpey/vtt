@@ -2,6 +2,7 @@ package services
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"strings"
 
@@ -12,7 +13,12 @@ import (
 
 func InitUserMapService() {
 	db.Connect()
-	db.Database.AutoMigrate(&models.BattleMap{})
+	err := db.Database.AutoMigrate(&models.BattleMap{})
+
+	if err != nil {
+		fmt.Println("Couldnt Connect to the Database... Aborting")
+		panic(err)
+	}
 }
 
 func SaveBattleMap(newBattleMap models.NewBattleMap) (*models.BattleMap, error) {
@@ -24,7 +30,12 @@ func SaveBattleMap(newBattleMap models.NewBattleMap) (*models.BattleMap, error) 
 
 	buf := bytes.NewBuffer(nil)
 
-	io.Copy(buf, file)
+	_, err := io.Copy(buf, file)
+
+	if err != nil {
+		return &models.BattleMap{}, err
+	}
+
 	result, err := aws.SaveFile(buf, mapName)
 
 	if err != nil {
@@ -89,7 +100,7 @@ func GetBattleMapById(id int) (*models.BattleMap, error) {
 }
 
 func GetBattleMaps() (*[]models.BattleMap, error) {
-	toReturn := []models.BattleMap{}
+	var toReturn []models.BattleMap
 
 	err := db.Database.Find(&toReturn).Error
 
