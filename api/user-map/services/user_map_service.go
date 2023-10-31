@@ -79,7 +79,7 @@ func GetBattleMapById(id int) (*models.BattleMap, error) {
 		return nil, err
 	}
 
-	toReturn.StoragePath, err = aws.GetFileUrl(toReturn.StoragePath)
+	toReturn.StoragePath, err = aws.GetSignedFileUrl(toReturn.StoragePath)
 
 	if err != nil {
 		return nil, err

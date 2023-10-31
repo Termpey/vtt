@@ -25,6 +25,6 @@ func Connect() {
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Print("Database connection successful")
+		fmt.Println("Database connection successful")
 	}
 }

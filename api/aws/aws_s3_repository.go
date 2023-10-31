@@ -2,6 +2,8 @@ package aws
 
 import (
 	"bytes"
+	"net/url"
+	_ "net/url"
 	"strings"
 	"sync"
 	"time"
@@ -30,13 +32,17 @@ func getInstance() *session.Session {
 	return sess
 }
 
-func GetFileUrl(objUrl string) (string, error) {
+func GetSignedFileUrl(objUrl string) (string, error) {
 	var localSess = getInstance()
 	serviceClient := s3.New(localSess)
 
 	urlSlice := strings.Split(objUrl, "/")
 
-	objKey := urlSlice[len(urlSlice)-2] + "/" + urlSlice[len(urlSlice)-1]
+	var bucket, _ = url.QueryUnescape(urlSlice[len(urlSlice)-2])
+
+	var file, _ = url.QueryUnescape(urlSlice[len(urlSlice)-1])
+
+	objKey := bucket + "/" + file
 
 	req, _ := serviceClient.GetObjectRequest(&s3.GetObjectInput{
 		Bucket: aws.String("vtt-dev"),
